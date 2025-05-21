@@ -116,6 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildSearchTextFormField() {
     return TextFormField(
+      textInputAction: TextInputAction.search,
       decoration: InputDecoration(
         hintText: context.localization.search,
         prefixIcon: const Icon(Icons.search_outlined),

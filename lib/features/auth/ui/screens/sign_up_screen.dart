@@ -1,10 +1,16 @@
 import 'package:ecommerce/app/app_colors.dart';
 import 'package:ecommerce/core/extensions/localization_extension.dart';
+import 'package:ecommerce/core/widget/centered_circular_progress_indicator.dart';
+import 'package:ecommerce/core/widget/show_snack_bar_message.dart';
+import 'package:ecommerce/features/auth/data/model/sign_up_model.dart';
+import 'package:ecommerce/features/auth/ui/controllers/sign_up_controller.dart';
 import 'package:ecommerce/features/auth/ui/screens/sign_in_screen.dart';
 import 'package:ecommerce/features/auth/ui/screens/verify_otp_screen.dart';
 import 'package:ecommerce/features/auth/ui/widget/app_logo.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -25,6 +31,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final SignUpController _signUpController = Get.find<SignUpController>();
 
   @override
   Widget build(BuildContext context) {
@@ -62,55 +70,106 @@ class _SignUpScreenState extends State<SignUpScreen> {
           const SizedBox(height: 16),
           TextFormField(
             controller: _firstnameTEController,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(
               hintText: context.localization.firstName,
             ),
+            validator: (String? value) {
+              if (value?.trim().isEmpty ?? true) {
+                return 'Enter Your First Name';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: 8),
           TextFormField(
             controller: _lastNameTEController,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(
               hintText: context.localization.lastName,
             ),
+            validator: (String? value) {
+              if (value?.trim().isEmpty ?? true) {
+                return 'Enter Your Last Name';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: 8),
           TextFormField(
             controller: _mobileTEController,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             keyboardType: TextInputType.phone,
             decoration: InputDecoration(
               hintText: context.localization.mobile,
             ),
+            validator: (String? value) {
+              String phoneNumber = value ?? '';
+              RegExp regExp = RegExp(r'^(?:/+88|88)?01[3-9]\d{8}$');
+              if (regExp.hasMatch(phoneNumber) == false) {
+                return 'Enter Your Valid Phone Number';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: 8),
           TextFormField(
             controller: _emailTEController,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               hintText: context.localization.email,
             ),
+            validator: (String? value) {
+              String email = value ?? '';
+              if (!EmailValidator.validate(email)) {
+                return 'Enter Your Valid Email';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: 8),
           TextFormField(
             controller: _passwordTEController,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(
               hintText: context.localization.password,
             ),
+            validator: (String? value) {
+              if ((value?.isEmpty ?? true) || value!.length < 6) {
+                return 'Enter a Password 6 Letter';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: 8),
           TextFormField(
             controller: _deliveryAddressTEController,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(
               hintText: context.localization.deliveryAddress,
             ),
+            validator: (String? value) {
+              if (value?.trim().isEmpty ?? true) {
+                return 'Enter Your Delivery Address';
+              }
+              return null;
+            },
             maxLines: 3,
           ),
           const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              _onTabVerifyOtpButton();
-            },
-            child: Text(context.localization.signUp),
-          ),
+          GetBuilder<SignUpController>(builder: (controller) {
+            return Visibility(
+              visible: controller.inProgress == false,
+              replacement: const CenteredCircularProgressIndicator(),
+              child: ElevatedButton(
+                onPressed: () {
+                  _onTabSignUpButton();
+                },
+                child: Text(context.localization.signUp),
+              ),
+            );
+          }),
           const SizedBox(height: 24),
           _buildSignInSection(),
         ],
@@ -140,13 +199,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-
   void _onTabSignInButton() {
     Navigator.pushNamed(context, SignInScreen.name);
   }
 
-  void _onTabVerifyOtpButton(){
-    Navigator.pushNamed(context, VerifyOtpScreen.name);
+  Future<void> _onTabSignUpButton() async {
+    if (_formKey.currentState!.validate()) {
+      SignUpModel signUpModel = SignUpModel(
+        fistName: _firstnameTEController.text.trim(),
+        lastName: _lastNameTEController.text.trim(),
+        email: _emailTEController.text.trim(),
+        password: _passwordTEController.text,
+        mobileNumber: _mobileTEController.text.trim(),
+        deliveryAddress: _deliveryAddressTEController.text.trim(),
+      );
+      final bool isSuccess  = await _signUpController.signUp(signUpModel);
+
+      if(isSuccess) {
+        Navigator.pushNamed(context, VerifyOtpScreen.name);
+      } else{
+        showSnackBarMessage(context, _signUpController.errorMessage!, true);
+      }
+    }
   }
 
   @override

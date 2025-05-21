@@ -1,6 +1,7 @@
 import 'package:ecommerce/app/app_colors.dart';
 import 'package:ecommerce/core/extensions/localization_extension.dart';
 import 'package:ecommerce/features/auth/ui/screens/sign_up_screen.dart';
+import 'package:ecommerce/features/products/ui/screens/product_review_screen.dart';
 import 'package:ecommerce/features/products/ui/widgets/color_picker.dart';
 import 'package:ecommerce/features/products/ui/widgets/increment_decrement_count.dart';
 import 'package:ecommerce/features/products/ui/widgets/product_image_carousel_slider.dart';
@@ -39,28 +40,38 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             Expanded(
                               child: Column(
                                 children: [
-                                  const Text(
-                                    'Happy New Year Special Deal Save 30%',
-                                    style: TextStyle(
+                                  Text(
+                                    context.localization
+                                        .happyNewYearSpecialDealSave,
+                                    style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                   Row(
                                     children: [
-                                      const Row(
+                                      Row(
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.star,
                                             color: Colors.amber,
                                             size: 20,
                                           ),
-                                          Text('4.2'),
+                                          Text(context
+                                              .localization.productRating),
                                         ],
                                       ),
                                       TextButton(
-                                        onPressed: () {},
-                                        child: const Text('Review'),
+                                        onPressed: () {
+                                          Navigator.pushNamed(context,
+                                              ProductReviewScreen.name);
+                                        },
+                                        child: Text(
+                                          context.localization.review,
+                                          style: const TextStyle(
+                                            color: AppColors.themeColor,
+                                          ),
+                                        ),
                                       ),
                                       Card(
                                         color: AppColors.themeColor,
@@ -91,12 +102,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ),
                         const SizedBox(height: 8),
                         ColorPicker(
-                          colors: const [
-                            'Red',
-                            'White',
-                            'Blue',
-                            'Black',
-                            'Pink'
+                          colors: [
+                            context.localization.red,
+                            context.localization.white,
+                            context.localization.blue,
+                            context.localization.black,
+                            context.localization.pink,
                           ],
                           onChang: (selectedColor) {
                             print(selectedColor);
@@ -104,26 +115,29 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ),
                         const SizedBox(height: 16),
                         SizePicker(
-                          size: const ['S', 'M', 'L', 'XL'],
+                          size: [
+                            context.localization.smallSize,
+                            context.localization.mediumSize,
+                            context.localization.largeSize,
+                            context.localization.extraLargeSize,
+                          ],
                           onChang: (selectedColor) {
                             print(selectedColor);
                           },
                         ),
                         const SizedBox(height: 24),
-                        const Column(
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Description',
-                              style: TextStyle(
+                              context.localization.productDescriptionTitle,
+                              style: const TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.w600),
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Text(
-                              'Reference site about Lorem Ipsum, giving information on its origins, as well as a random Lip sum generator Reference site about Lorem Ipsum, giving information on its origins, as well as a random Lip sum generator Reference site about Lorem Ipsum, giving information on its origins, as well as a random Lip sum generator.',
-                              style: TextStyle(
-                                color: Colors.grey
-                              ),
+                              context.localization.productDescriptionTDetails,
+                              style: const TextStyle(color: Colors.grey),
                             ),
                           ],
                         ),
@@ -153,13 +167,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Column(
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Price'),
+              Text(context.localization.cartPriceTitle),
               Text(
-                '\$1000',
-                style: TextStyle(
+                context.localization.cartPriceCount,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                   color: AppColors.themeColor,
@@ -168,12 +182,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ],
           ),
           SizedBox(
-            width: 140,
+            width: 160,
             child: ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, SignUpScreen.name);
               },
-              child: const Text('Add to Cart'),
+              child: Text(context.localization.addToCart),
             ),
           ),
         ],

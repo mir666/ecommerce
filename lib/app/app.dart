@@ -2,6 +2,7 @@ import 'package:ecommerce/app/app_colors.dart';
 import 'package:ecommerce/app/app_routes.dart';
 import 'package:ecommerce/app/controller_binder.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
@@ -27,6 +28,10 @@ class _CraftyBayState extends State<CraftyBay> {
           titleLarge: TextStyle(fontSize: 28, fontWeight: FontWeight.w600),
         ),
         inputDecorationTheme: const InputDecorationTheme(
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 10,
+          ),
           border: OutlineInputBorder(
             borderSide: BorderSide(
               color: AppColors.themeColor,
