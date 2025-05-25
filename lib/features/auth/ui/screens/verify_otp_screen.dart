@@ -1,6 +1,6 @@
 import 'package:ecommerce/core/extensions/localization_extension.dart';
 import 'package:ecommerce/core/widget/show_snack_bar_message.dart';
-import 'package:ecommerce/features/auth/data/model/verify_otp_model.dart';
+import 'package:ecommerce/features/auth/data/models/verify_otp_model.dart';
 import 'package:ecommerce/features/auth/ui/controllers/verify_otp_controller.dart';
 import 'package:ecommerce/features/auth/ui/screens/sign_in_screen.dart';
 import 'package:ecommerce/features/auth/ui/widget/app_logo.dart';
@@ -74,8 +74,8 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                   backgroundColor: Colors.transparent,
                   controller: _otpTEController,
                   appContext: context,
-                  validator: (String? value){
-                    if((value!.length ?? 0) < 4){
+                  validator: (String? value) {
+                    if ((value!.length) < 4) {
                       return 'Enter your OTP';
                     }
                     return null;
@@ -87,6 +87,22 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                   child: Text(context.localization.verifyButton),
                 ),
                 const SizedBox(height: 24),
+               /* Column(
+                  children: [
+                    Visibility(
+                      child: TextButton(
+                        onPressed: () {},
+                        child: const Text('Reset OTP'),
+                      ),
+                    ),
+                    Visibility(
+                      child: TextButton(
+                        onPressed: () {},
+                        child: const Text('Reset OTP in ${}'),
+                      ),
+                    ),
+                  ],
+                ),*/
               ],
             ),
           ),
@@ -95,8 +111,8 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
     );
   }
 
-  void _onTapVerifyOtpButton(){
-    if(_formKey.currentState!.validate()){
+  void _onTapVerifyOtpButton() {
+    if (_formKey.currentState!.validate()) {
       _verifyOtp();
     }
   }

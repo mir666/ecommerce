@@ -1,5 +1,5 @@
 import 'package:ecommerce/core/extensions/localization_extension.dart';
-import 'package:ecommerce/features/common/widget/product_card.dart';
+import 'package:ecommerce/features/common/ui/widget/product_card.dart';
 import 'package:flutter/material.dart';
 
 class WishListScreen extends StatelessWidget {

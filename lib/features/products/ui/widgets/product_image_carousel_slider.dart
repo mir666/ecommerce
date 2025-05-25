@@ -1,19 +1,21 @@
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ecommerce/app/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class ProductImageCarouselSlider extends StatefulWidget {
   const ProductImageCarouselSlider({
-    super.key,
+    super.key, required this.imageList,
   });
+
+  final List<String> imageList;
 
   @override
   State<ProductImageCarouselSlider> createState() => _ProductImageCarouselSliderState();
 }
 
 class _ProductImageCarouselSliderState extends State<ProductImageCarouselSlider> {
-
-  int _selectedIndex = 0;
+  int _selectedSlider = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -24,28 +26,17 @@ class _ProductImageCarouselSliderState extends State<ProductImageCarouselSlider>
             height: 220,
             viewportFraction: 1,
             onPageChanged: (index, reason) {
-              _selectedIndex = index;
+              _selectedSlider = index;
               setState(() {});
             },
           ),
-          items: [1, 2, 3, 4, 5].map(
-            (i) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.grey,
-                    child: Center(
-                      child: Text(
-                        'image $i',
-                        style: const TextStyle(fontSize: 16.0),
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-          ).toList(),
+          items: widget.imageList.map((image) {
+            return Builder(
+              builder: (BuildContext context) {
+                return Image.network(image, fit: BoxFit.cover);
+              },
+            );
+          }).toList(),
         ),
         Positioned(
           bottom: 8,
@@ -54,20 +45,22 @@ class _ProductImageCarouselSliderState extends State<ProductImageCarouselSlider>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              for (int i = 0; i < 5; i++)
+              for (int i = 0; i < widget.imageList.length; i++)
                 Container(
                   height: 16,
                   width: 16,
                   margin: const EdgeInsets.only(left: 4),
                   decoration: BoxDecoration(
-                    color: _selectedIndex == i ? AppColors.themeColor : Colors.white,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: AppColors.themeColor),
+                    border: Border.all(color: Colors.grey),
+                    color: _selectedSlider == i
+                        ? AppColors.themeColor
+                        : Colors.white,
                   ),
-                ),
+                )
             ],
           ),
-        ),
+        )
       ],
     );
   }

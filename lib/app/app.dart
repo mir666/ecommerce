@@ -2,10 +2,10 @@ import 'package:ecommerce/app/app_colors.dart';
 import 'package:ecommerce/app/app_routes.dart';
 import 'package:ecommerce/app/controller_binder.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
+
+import '../l10n/app_localizations.dart';
 
 class CraftyBay extends StatefulWidget {
   const CraftyBay({super.key});

@@ -1,4 +1,4 @@
-import 'package:ecommerce/features/common/widget/product_card.dart';
+import 'package:ecommerce/features/common/ui/widget/product_card.dart';
 import 'package:flutter/material.dart';
 
 class ProductListScreen extends StatefulWidget {

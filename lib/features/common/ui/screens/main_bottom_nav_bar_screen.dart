@@ -1,21 +1,23 @@
 import 'package:ecommerce/features/categories/ui/screens/categories_list_screen.dart';
+import 'package:ecommerce/features/common/controllers/category_controller.dart';
+import 'package:ecommerce/features/common/controllers/home_slide_controller.dart';
 import 'package:ecommerce/features/common/controllers/main_bottom_nav_bar_controller.dart';
 import 'package:ecommerce/features/home/ui/screens/home_screen.dart';
 import 'package:ecommerce/features/wishlist/ui/screens/wish_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class MainBottomNavBar extends StatefulWidget {
-  const MainBottomNavBar({super.key});
+class MainBottomNavBarScreen extends StatefulWidget {
+  const MainBottomNavBarScreen({super.key});
 
   static const String name = 'main-bottom-nav-bar';
 
   @override
-  State<MainBottomNavBar> createState() => _MainBottomNavBarState();
+  State<MainBottomNavBarScreen> createState() => _MainBottomNavBarScreenState();
 }
 
-class _MainBottomNavBarState extends State<MainBottomNavBar> {
-  int _selectedIndex = 0;
+class _MainBottomNavBarScreenState extends State<MainBottomNavBarScreen> {
+
 
   final List<Widget> _screens = [
     const HomeScreen(),
@@ -23,6 +25,15 @@ class _MainBottomNavBarState extends State<MainBottomNavBar> {
     const HomeScreen(),
     const WishListScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.find<HomeSliderController>().getSliders();
+      Get.find<CategoryController>().getCategoryList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

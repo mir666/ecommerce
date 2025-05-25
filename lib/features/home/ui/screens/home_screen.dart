@@ -1,10 +1,12 @@
 import 'package:ecommerce/app/assets_path.dart';
 import 'package:ecommerce/core/extensions/localization_extension.dart';
+import 'package:ecommerce/core/widget/centered_circular_progress_indicator.dart';
+import 'package:ecommerce/features/common/controllers/category_controller.dart';
 import 'package:ecommerce/features/common/controllers/main_bottom_nav_bar_controller.dart';
+import 'package:ecommerce/features/common/data/models/category_model.dart';
+import 'package:ecommerce/features/common/ui/widget/category_item.dart';
 import 'package:ecommerce/features/home/ui/widget/action_bar_button.dart';
-import 'package:ecommerce/features/common/widget/category_item.dart';
 import 'package:ecommerce/features/home/ui/widget/home_carousel_slider.dart';
-import 'package:ecommerce/features/common/widget/product_card.dart';
 import 'package:ecommerce/features/home/ui/widget/section_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -27,38 +29,38 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              _buildSearchTextFormField(),
+              _buildSearchTextField(),
               const SizedBox(height: 16),
               const HomeCarouselSlider(),
               const SizedBox(height: 16),
               SectionHeader(
-                title: context.localization.allCategory,
+                title: context.localization.category,
                 onTapSeeAll: () {
                   Get.find<MainBottomNavBarController>().moveToCategory();
                 },
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
               _buildCategoriesSection(),
               const SizedBox(height: 16),
               SectionHeader(
                 title: context.localization.popular,
                 onTapSeeAll: () {},
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
               _buildProductSection(),
               const SizedBox(height: 16),
               SectionHeader(
                 title: context.localization.special,
                 onTapSeeAll: () {},
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
               _buildProductSection(),
               const SizedBox(height: 16),
               SectionHeader(
                 title: context.localization.sNew,
                 onTapSeeAll: () {},
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
               _buildProductSection(),
             ],
           ),
@@ -72,67 +74,57 @@ class _HomeScreenState extends State<HomeScreen> {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          ProductCard(),
-          SizedBox(width: 8),
-          ProductCard(),
-          SizedBox(width: 8),
-          ProductCard(),
-          SizedBox(width: 8),
-          ProductCard(),
+          // ProductCard(),
+          // ProductCard(),
+          // ProductCard(),
+          // ProductCard(),
         ],
       ),
     );
   }
 
   Widget _buildCategoriesSection() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          CategoryItem(
-            icon: Icons.monitor,
-            title: context.localization.electronics,
+    return GetBuilder<CategoryController>(
+      builder: (controller) {
+        if (controller.isInitialLoading) {
+          return const SizedBox(
+            height: 100,
+            child: CenteredCircularProgressIndicator(),
+          );
+        }
+
+        List<CategoryModel> list = controller.categoryList.length > 10
+            ? controller.categoryList.sublist(0, 10)
+            : controller.categoryList;
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: list.map((e) {
+              return CategoryItem(categoryModel: e);
+            }).toList(),
           ),
-          CategoryItem(
-            icon: Icons.monitor,
-            title: context.localization.electronics,
-          ),
-          CategoryItem(
-            icon: Icons.monitor,
-            title: context.localization.electronics,
-          ),
-          CategoryItem(
-            icon: Icons.monitor,
-            title: context.localization.electronics,
-          ),
-          CategoryItem(
-            icon: Icons.monitor,
-            title: context.localization.electronics,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildSearchTextFormField() {
-    return TextFormField(
+  Widget _buildSearchTextField() {
+    return TextField(
       textInputAction: TextInputAction.search,
       decoration: InputDecoration(
-        hintText: context.localization.search,
-        prefixIcon: const Icon(Icons.search_outlined),
         fillColor: Colors.grey.shade200,
         filled: true,
-        border: OutlineInputBorder(
+        hintText: 'Search',
+        prefixIcon: const Icon(Icons.search),
+        border: const OutlineInputBorder(
           borderSide: BorderSide.none,
-          borderRadius: BorderRadius.circular(8),
         ),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide.none,
-          borderRadius: BorderRadius.circular(8),
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide.none,
-          borderRadius: BorderRadius.circular(8),
         ),
       ),
     );
@@ -140,13 +132,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      title: SvgPicture.asset(
-        AssetsPath.logoNavSvg,
-        width: 150,
-      ),
+      title: SvgPicture.asset(AssetsPath.logoNavSvg),
       actions: [
         ActionBarButton(
-          icon: Icons.person_2_outlined,
+          icon: Icons.person_outline,
           onTap: () {},
         ),
         const SizedBox(width: 8),
@@ -159,7 +148,6 @@ class _HomeScreenState extends State<HomeScreen> {
           icon: Icons.notifications_active_outlined,
           onTap: () {},
         ),
-        const SizedBox(width: 8),
       ],
     );
   }

@@ -2,7 +2,7 @@ import 'package:ecommerce/app/app_colors.dart';
 import 'package:ecommerce/core/extensions/localization_extension.dart';
 import 'package:ecommerce/core/widget/centered_circular_progress_indicator.dart';
 import 'package:ecommerce/core/widget/show_snack_bar_message.dart';
-import 'package:ecommerce/features/auth/data/model/sign_up_model.dart';
+import 'package:ecommerce/features/auth/data/models/sign_up_model.dart';
 import 'package:ecommerce/features/auth/ui/controllers/sign_up_controller.dart';
 import 'package:ecommerce/features/auth/ui/screens/sign_in_screen.dart';
 import 'package:ecommerce/features/auth/ui/screens/verify_otp_screen.dart';

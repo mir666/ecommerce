@@ -1,6 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ecommerce/app/app_colors.dart';
+import 'package:ecommerce/core/widget/centered_circular_progress_indicator.dart';
+import 'package:ecommerce/features/common/controllers/home_slide_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class HomeCarouselSlider extends StatefulWidget {
   const HomeCarouselSlider({
@@ -12,63 +15,82 @@ class HomeCarouselSlider extends StatefulWidget {
 }
 
 class _HomeCarouselSliderState extends State<HomeCarouselSlider> {
-
-  int _selectedIndex = 0;
+  int _selectedSlider = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CarouselSlider(
-          options: CarouselOptions(
-            height: 200,
-            viewportFraction: 0.90,
-            onPageChanged: (index, reason) {
-              _selectedIndex = index;
-              setState(() {});
-            },
-          ),
-          items: [1, 2, 3, 4, 5].map(
-            (i) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.symmetric(horizontal: 2),
-                    decoration: BoxDecoration(
-                      color: AppColors.themeColor,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'text $i',
-                        style: const TextStyle(fontSize: 16.0),
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-          ).toList(),
+    return GetBuilder<HomeSliderController>(builder: (sliderController) {
+      return Visibility(
+        visible: sliderController.inProgress == false,
+        replacement: const SizedBox(
+          height: 200,
+          child: CenteredCircularProgressIndicator(),
         ),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            for (int i = 0; i < 5; i++)
-              Container(
-                height: 16,
-                width: 16,
-                margin: const EdgeInsets.only(left: 4),
-                decoration: BoxDecoration(
-                  color: _selectedIndex == i ? AppColors.themeColor : Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.themeColor),
+        child: Visibility(
+          visible: sliderController.sliderList.isNotEmpty,
+          child: Column(
+            children: [
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: 200,
+                  viewportFraction: 0.9,
+                  autoPlay: true,
+                  onPageChanged: (index, reason) {
+                    _selectedSlider = index;
+                    setState(() {});
+                  },
                 ),
+                items: sliderController.sliderList.map((slider) {
+                  return Builder(
+                    builder: (BuildContext context) {
+                      return Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.symmetric(horizontal: 2),
+                        decoration: BoxDecoration(
+                          color: AppColors.themeColor,
+                          borderRadius: BorderRadius.circular(8),
+                          image: DecorationImage(
+                              image: NetworkImage(slider.photoUrl),
+                              fit: BoxFit.cover),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            slider.description,
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }).toList(),
               ),
-          ],
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (int i = 0; i < sliderController.sliderList.length; i++)
+                    Container(
+                      height: 16,
+                      width: 16,
+                      margin: const EdgeInsets.only(left: 4),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.grey),
+                        color: _selectedSlider == i
+                            ? AppColors.themeColor
+                            : Colors.white,
+                      ),
+                    )
+                ],
+              )
+            ],
+          ),
         ),
-      ],
-    );
+      );
+    });
   }
 }
